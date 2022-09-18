@@ -1,0 +1,13 @@
+version: "3"
+
+services:
+  yazu-nextjs:
+    container_name: yazu-nextjs-container
+    image: yazu-nextjs-img
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - 4100:3000
+    env_file:
+      - .env

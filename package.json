@@ -3,15 +3,29 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "docker:rm": "docker compose rm yazu-nextjs -s -f",
+    "docker:up": "docker compose up yazu-nextjs -d",
+    "docker:build": "docker compose build yazu-nextjs",
+    "start:deploy": "npm run docker:rm && npm run docker:build && npm run docker:up",
+    "linux:docker:rm": "docker-compose rm --s --f yazu-nextjs",
+    "linux:docker:up": "docker-compose up --d yazu-nextjs",
+    "linux:docker:build": "docker-compose build yazu-nextjs",
+    "linux:start:deploy": "npm run linux:docker:rm && npm run linux:docker:build && npm run linux:docker:up",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
   },
   "dependencies": {
+    "axios": "^0.27.2",
+    "bootstrap": "^5.1.3",
+    "classnames": "^2.3.1",
+    "jquery": "^3.6.0",
     "next": "12.1.6",
     "react": "18.2.0",
-    "react-dom": "18.2.0"
+    "react-dom": "18.2.0",
+    "react-query": "^3.39.1",
+    "sass": "^1.53.0"
   },
   "devDependencies": {
     "@types/node": "18.0.0",
