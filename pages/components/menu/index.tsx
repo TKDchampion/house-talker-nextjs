@@ -4,11 +4,13 @@ import { useEffect, useState } from "react";
 import { storageClear, storageGet, storageHasItem } from "../../core/storage";
 import { useRouter } from "next/router";
 import LoginModal from "./components-custom/login-modal";
+import SignupModal from "./components-custom/signup-modal";
 
 const Menu = () => {
   // hooks
   const [isLogin, setIsLogin] = useState(false);
   const [isOpenPopupLogin, setIsOpenPopupLogin] = useState(false);
+  const [isOpenPopupSignup, setIsOpenPopupSignup] = useState(false);
   const router = useRouter();
 
   // event
@@ -47,7 +49,12 @@ const Menu = () => {
                 >
                   登入
                 </div>
-                <div className="header-menu-item">註冊</div>
+                <div
+                  className="header-menu-item"
+                  onClick={() => setIsOpenPopupSignup(true)}
+                >
+                  註冊
+                </div>
               </div>
             )}
           </div>
@@ -58,6 +65,10 @@ const Menu = () => {
         isOpenPopupLogin={isOpenPopupLogin}
         setIsOpenPopupLogin={setIsOpenPopupLogin}
         setIsLogin={setIsLogin}
+      />
+      <SignupModal
+        isOpenPopupSignup={isOpenPopupSignup}
+        setIsOpenPopupSignup={setIsOpenPopupSignup}
       />
     </>
   );

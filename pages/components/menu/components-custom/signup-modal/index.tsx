@@ -3,26 +3,21 @@ import { useEffect, useState } from "react";
 import * as Yup from "yup";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { storageSet } from "../../../../core/storage";
-import { LoginInfo, LoginParam } from "../../../../services/auth/model";
-import { loginService } from "../../../../services/auth";
+import { SingParam } from "../../../../services/auth/model";
+import { signupService } from "../../../../services/auth";
 import Dialogue from "../../../dialogue";
 import SpinnerLatticefi from "../../../spinner";
 
 interface Props {
-  isOpenPopupLogin: boolean;
-  setIsOpenPopupLogin:
-    | React.Dispatch<React.SetStateAction<boolean>>
-    | React.Dispatch<boolean>;
-  setIsLogin:
+  isOpenPopupSignup: boolean;
+  setIsOpenPopupSignup:
     | React.Dispatch<React.SetStateAction<boolean>>
     | React.Dispatch<boolean>;
 }
 
-const LoginModal: React.FC<Props> = ({
-  isOpenPopupLogin,
-  setIsOpenPopupLogin,
-  setIsLogin,
+const SignupModal: React.FC<Props> = ({
+  isOpenPopupSignup,
+  setIsOpenPopupSignup,
 }) => {
   // hooks
   const [isOpenSpinner, setIsOpenSpinner] = useState(false);
@@ -30,6 +25,7 @@ const LoginModal: React.FC<Props> = ({
   const validationSchema = Yup.object().shape({
     email: Yup.string().required("此欄位必填").email("格式錯誤"),
     password: Yup.string().required("此欄位必填"),
+    nickName: Yup.string().required("此欄位必填"),
   });
   const formOptions = { resolver: yupResolver(validationSchema) };
   const {
@@ -37,54 +33,47 @@ const LoginModal: React.FC<Props> = ({
     handleSubmit,
     setValue,
     formState: { errors },
-  } = useForm<LoginParam>(formOptions);
+  } = useForm<SingParam>(formOptions);
 
   // event
   useEffect(() => {
-    if (isOpenPopupLogin) {
+    if (isOpenPopupSignup) {
       setValue("email", "");
       setValue("password", "");
+      setValue("nickName", "");
       setRespMessages("");
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isOpenPopupLogin]);
+  }, [isOpenPopupSignup]);
 
   // functions
-  const onSubmitLogin: SubmitHandler<LoginParam> = (data) => {
+  const onSubmitLogin: SubmitHandler<SingParam> = (data) => {
     setIsOpenSpinner(true);
-    loginService(data).then(
-      (resp: any | LoginInfo) => {
-        setPersonal(resp);
+    signupService(data).then(
+      () => {
         setIsOpenSpinner(false);
-        setIsOpenPopupLogin(false);
-        setRespMessages("登入成功");
+        setIsOpenPopupSignup(false);
+        setRespMessages("註冊成功，請到信箱啟用連結。");
       },
-      (error: {
-        data: { statusCode: number; message: React.SetStateAction<string> };
-      }) => {
+      (error) => {
         console.log(error);
         setIsOpenSpinner(false);
         setRespMessages(
-          error.data.statusCode === 401 ? "帳密錯誤" : error.data.message
+          error.data.statusCode === 403 ? error.data.message : "註冊失敗"
         );
+        setValue("password", "");
+        setValue("nickName", "");
       }
     );
-  };
-  const setPersonal = (info: LoginInfo) => {
-    storageSet("access_token", info.access_token as any);
-    storageSet("email", info.email as any);
-    storageSet("nickName", info.nickName as any);
-    storageSet("userId", info.userId as any);
-    setIsLogin(true);
   };
 
   return (
     <>
       {isOpenSpinner && <SpinnerLatticefi />}
       <Dialogue
-        isOpen={isOpenPopupLogin}
-        setStatus={setIsOpenPopupLogin}
-        title="登入"
+        isOpen={isOpenPopupSignup}
+        setStatus={setIsOpenPopupSignup}
+        title="註冊"
       >
         <form className="center" onSubmit={handleSubmit(onSubmitLogin)}>
           <div className="inputbox">
@@ -109,6 +98,19 @@ const LoginModal: React.FC<Props> = ({
               {errors.password ? (errors.password.message as string) : ""}
             </div>
           </div>
+          <div className="inputbox">
+            <div className="center-input">
+              <input
+                {...register("nickName", { required: true })}
+                type="text"
+                name="nickName"
+              />
+              <span>暱稱</span>
+            </div>
+            <div className="error-message">
+              {errors.nickName ? (errors.nickName.message as string) : ""}
+            </div>
+          </div>
           <div className="inputbox center-margin">
             <button className="w-100" type="submit">
               送出
@@ -121,4 +123,4 @@ const LoginModal: React.FC<Props> = ({
   );
 };
 
-export default LoginModal;
+export default SignupModal;
