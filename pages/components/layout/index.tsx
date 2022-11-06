@@ -1,5 +1,5 @@
-import Link from "next/link";
 import { FC } from "react";
+import Menu from "../menu";
 
 interface Props {
   children?: React.ReactNode;
@@ -9,24 +9,12 @@ const Layout: FC<Props> = ({ children }) => {
   return (
     <div>
       {/* Navbar Start */}
-      <nav>
-        <div>
-          <div>
-            <Link href="/">
-              <a>HOME</a>
-            </Link>
-            <Link href="/info">
-              <a>INFO</a>
-            </Link>
-            <Link href="/about/1">
-              <a>ABOUT</a>
-            </Link>
-          </div>
-        </div>
-      </nav>
+      <Menu />
       {/* Navbar End */}
 
-      {children}
+      <div className="body">
+        <div className="container-lg">{children}</div>
+      </div>
 
       {/* Footer Start */}
       <div>FOOTER</div>

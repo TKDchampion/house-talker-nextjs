@@ -21,7 +21,7 @@ export default function getAxiosInstance(apiconfig: ApiConfig): AxiosInstance {
   const apiConfig = {
     baseURL: !!apiconfig.baseConfig?.baseURL
       ? apiconfig.baseConfig.baseURL
-      : process.env["REACT_APP_URL"],
+      : process.env["NEXT_PUBLIC_URL"],
     headers: !!apiconfig.baseConfig?.headers
       ? apiconfig.baseConfig.headers
       : {
@@ -29,6 +29,9 @@ export default function getAxiosInstance(apiconfig: ApiConfig): AxiosInstance {
         "content-type": "application/json",
       },
   };
+
+  console.log(process.env["NEXT_PUBLIC_URL"]);
+
 
   const service = axios.create(apiConfig);
 

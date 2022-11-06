@@ -1,0 +1,93 @@
+// menu
+.header-bar {
+  background-color: #3f5fc3;
+  border-color: #2e499d;
+  box-shadow: 0 2px 5px rgb(0 0 0 / 45%);
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  z-index: 1030;
+  padding: 0.5rem 1rem;
+  height: 64px;
+  font-size: 22px;
+  color: #ffffff;
+  font-weight: 600;
+  line-height: 45px;
+}
+.logo {
+  cursor: pointer;
+}
+.header-menu {
+  font-size: 16px;
+  font-weight: 400;
+}
+.header-menu-item {
+  margin: 0 10px;
+  &:hover {
+    text-shadow: 2px 2px 0 #000;
+    cursor: pointer;
+  }
+
+  &.active {
+    text-shadow: 2px 2px 0 #000;
+  }
+}
+.body {
+  min-height: 100vh;
+  background: linear-gradient(#3f5fc3, #f2f3f9 240px);
+  padding-top: 100px;
+}
+
+// form
+.center {
+  margin-top: 60px;
+}
+.center-input {
+  height: 52px;
+}
+.center .inputbox {
+  position: relative;
+  width: 300px;
+  height: 50px;
+  margin: 45px auto;
+}
+.center .inputbox input {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  border: 2px solid #000;
+  outline: none;
+  background: none;
+  padding: 10px;
+  border-radius: 10px;
+  font-size: 1.2em;
+}
+.center .inputbox span {
+  position: absolute;
+  top: 14px;
+  left: 20px;
+  font-size: 1em;
+  transition: 0.6s;
+  font-family: sans-serif;
+}
+.center .inputbox input:focus ~ span,
+.center .inputbox input:valid ~ span {
+  transform: translateX(-13px) translateY(-35px);
+  font-size: 1em;
+}
+.center .inputbox button {
+  height: 50px;
+  font-size: 20px;
+  border-radius: 10px;
+  background: #3f5fc3;
+  color: #fff;
+  border: #fff;
+  &:hover {
+    background: dodgerblue;
+  }
+}
+.error-message {
+  color: #e30000;
+}

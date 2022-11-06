@@ -1,4 +1,3 @@
-import { dehydrate, QueryClient } from "react-query";
 import BaseServices from "../../core/base-services";
 import { ApiConfig } from "../../core/base-services/model";
 

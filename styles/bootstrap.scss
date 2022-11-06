@@ -32,3 +32,12 @@
 @import "~bootstrap/scss/_functions.scss";
 @import "~bootstrap/scss/_variables.scss";
 @import "~bootstrap/scss/mixins/_breakpoints.scss";
+
+.btn-primary {
+  background-color: #5f799f;
+}
+
+.accordion-button:not(.collapsed) {
+  color: #fdfdfd;
+  background-color: #8297b7;
+}

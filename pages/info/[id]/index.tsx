@@ -11,6 +11,7 @@ const Info: any = (props: any) => {
       INFO
       <div>
         <button
+          className="btn btn-primary"
           onClick={() => {
             try {
               getServerSideFakeFtnRromise(props.id).then(

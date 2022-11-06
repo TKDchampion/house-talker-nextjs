@@ -19,11 +19,11 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout) {
   // Use the layout defined at the page level, if available
   const getLayout = Component.getLayout ?? ((page) => page);
 
-  useEffect(() => {
-    typeof document !== undefined
-      ? require("bootstrap/dist/js/bootstrap.bundle.min")
-      : null;
-  }, []);
+  // useEffect(() => {
+  //   typeof document !== undefined
+  //     ? require("bootstrap/dist/js/bootstrap.bundle.min")
+  //     : null;
+  // }, []);
 
   return getLayout(
     <>
