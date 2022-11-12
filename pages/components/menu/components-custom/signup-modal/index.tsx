@@ -6,7 +6,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { SingParam } from "../../../../services/auth/model";
 import { signupService } from "../../../../services/auth";
 import Dialogue from "../../../dialogue";
-import SpinnerLatticefi from "../../../spinner";
+import SpinnerCommon from "../../../spinner";
 
 interface Props {
   isOpenPopupSignup: boolean;
@@ -69,7 +69,7 @@ const SignupModal: React.FC<Props> = ({
 
   return (
     <>
-      {isOpenSpinner && <SpinnerLatticefi />}
+      {isOpenSpinner && <SpinnerCommon />}
       <Dialogue
         isOpen={isOpenPopupSignup}
         setStatus={setIsOpenPopupSignup}

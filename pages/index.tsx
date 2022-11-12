@@ -1,11 +1,28 @@
+import { useEffect, useState } from "react";
 import Accordion from "./components/accordion";
 import Box from "./components/box";
 import { getLayout } from "./components/layout";
+import ListItem from "./components/list-item";
+import SpinnerCommon from "./components/spinner";
+import { useAllNewsArticles } from "./services/article/hook";
+import { ArticleInfo } from "./services/article/model";
 import { NextPageWithLayout } from "./_app";
 
 const Home: NextPageWithLayout = () => {
+  const { allNewsArticlesResp } = useAllNewsArticles();
+  const [listData, setListData] = useState<ArticleInfo[]>();
+
+  useEffect(() => {
+    if (allNewsArticlesResp.isSuccess) {
+      setListData(allNewsArticlesResp.data?.data);
+    }
+  }, [allNewsArticlesResp.data?.data, allNewsArticlesResp.isSuccess]);
+
   return (
     <div className="row">
+      {(allNewsArticlesResp.isLoading || allNewsArticlesResp.isFetching) && (
+        <SpinnerCommon />
+      )}
       <div className="col-xl-4">
         <div className="row">
           <div className="col-12">
@@ -68,10 +85,9 @@ const Home: NextPageWithLayout = () => {
       </div>
       <div className="col-xl-8 article-list">
         <Box>
-          {/* <app-list-item
-        *ngFor="let item of articlesList"
-        [setting]="item"
-      ></app-list-item> */}
+          {listData?.map((item) => {
+            return <ListItem setting={item} key={item.id} />;
+          })}
         </Box>
       </div>
     </div>

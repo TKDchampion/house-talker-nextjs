@@ -7,7 +7,7 @@ import { storageSet } from "../../../../core/storage";
 import { LoginInfo, LoginParam } from "../../../../services/auth/model";
 import { loginService } from "../../../../services/auth";
 import Dialogue from "../../../dialogue";
-import SpinnerLatticefi from "../../../spinner";
+import SpinnerCommon from "../../../spinner";
 
 interface Props {
   isOpenPopupLogin: boolean;
@@ -80,7 +80,7 @@ const LoginModal: React.FC<Props> = ({
 
   return (
     <>
-      {isOpenSpinner && <SpinnerLatticefi />}
+      {isOpenSpinner && <SpinnerCommon />}
       <Dialogue
         isOpen={isOpenPopupLogin}
         setStatus={setIsOpenPopupLogin}

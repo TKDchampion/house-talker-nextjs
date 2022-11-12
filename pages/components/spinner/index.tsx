@@ -1,7 +1,7 @@
 import React from "react";
 import { Spinner } from "react-bootstrap";
 
-const SpinnerLatticefi: React.FC = () => {
+const SpinnerCommon: React.FC = () => {
   return (
     <div className="spinner-bg">
       <div className="spinner-box">
@@ -11,4 +11,4 @@ const SpinnerLatticefi: React.FC = () => {
   );
 };
 
-export default SpinnerLatticefi;
+export default SpinnerCommon;
