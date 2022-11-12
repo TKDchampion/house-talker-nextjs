@@ -21,3 +21,12 @@ hr {
 * {
   box-sizing: border-box;
 }
+
+.btn-primary {
+  background-color: #5f799f;
+}
+
+.accordion-button:not(.collapsed) {
+  color: #fdfdfd;
+  background-color: #8297b7;
+}
