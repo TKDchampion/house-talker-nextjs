@@ -58,6 +58,7 @@ const LoginModal: React.FC<Props> = ({
         setIsOpenSpinner(false);
         setIsOpenPopupLogin(false);
         setRespMessages("登入成功");
+        window.location.reload();
       },
       (error: {
         data: { statusCode: number; message: React.SetStateAction<string> };

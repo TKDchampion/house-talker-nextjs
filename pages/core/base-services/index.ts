@@ -10,6 +10,10 @@ export default class BaseServices {
     return await postCall(apiconfig)
   };
 
+  patch = async (apiconfig: ApiConfig) => {
+    return await patchCall(apiconfig)
+  };
+
   delete = async (apiconfig: ApiConfig) => {
     return await deleteCall(apiconfig)
   };
@@ -37,6 +41,27 @@ const postCall = (apiconfig: ApiConfig) => {
   return new Promise((resolve, reject) => {
     getAxiosInstance(apiconfig)
       .post(
+        apiconfig.url,
+        apiconfig.body
+      )
+      .then(
+        (response) => {
+          resolve(response.data)
+        },
+        (err) => {
+          reject(err)
+        }
+      )
+      .catch((err) => {
+        reject(err)
+      })
+  })
+}
+
+const patchCall = (apiconfig: ApiConfig) => {
+  return new Promise((resolve, reject) => {
+    getAxiosInstance(apiconfig)
+      .patch(
         apiconfig.url,
         apiconfig.body
       )

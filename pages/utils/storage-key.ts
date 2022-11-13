@@ -1,5 +1,5 @@
 export const StorageKey = {
-  token: "token",
+  token: "access_token",
   expiredTime: "expiredTime",
   permission: "permission",
 };

@@ -1,3 +1,4 @@
+import { useRouter } from "next/router";
 import React from "react";
 import { ArticleInfo } from "../../services/article/model";
 
@@ -7,11 +8,14 @@ interface Props {
 }
 
 const ListItem: React.FC<Props> = ({ setting, isControlBtn }) => {
+  const router = useRouter();
+
   const goUpdateOrDetail = (pathName: "article-page" | "article-detail") => {
     // this.router.routeReuseStrategy.shouldReuseRoute = () => false;
     // this.router.onSameUrlNavigation = 'reload';
     // this.router.navigate([`/app/${pathName}/${this.setting?.id}`]);
     // this.modalService.hide();
+    router.push(`${pathName}/${setting?.id}`);
   };
 
   const deleteBtn = (articleId?: string) => {

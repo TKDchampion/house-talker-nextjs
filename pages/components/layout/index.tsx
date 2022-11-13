@@ -17,7 +17,7 @@ const Layout: FC<Props> = ({ children }) => {
       </div>
 
       {/* Footer Start */}
-      <div>FOOTER</div>
+      {/* <div>FOOTER</div> */}
       {/* Footer End */}
     </div>
   );

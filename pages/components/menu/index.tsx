@@ -33,7 +33,9 @@ const Menu = () => {
             HouseTalker
           </Link>
           <div className="d-flex header-menu">
-            <div className="header-menu-item">首頁</div>
+            <div className="header-menu-item" onClick={() => router.push("/")}>
+              首頁
+            </div>
             {isLogin ? (
               <div className="d-flex">
                 <div className="header-menu-item">{storageGet("nickName")}</div>

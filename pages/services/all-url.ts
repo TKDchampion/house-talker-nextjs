@@ -5,9 +5,15 @@ export const API_URL = {
 
     // Article
     getAllNewsArticles: () => 'article/getAllNews',
-    getArticleDetail: (id: number) => `article/getDetailById/${id}`,
+    getArticleDetail: (id: string) => `article/getDetailById/${id}`,
     getArticleForUser: () => 'article/getByUser',
     createArticle: () => 'article/create',
-    updateArticle: (id: number) => `article/update/${id}`,
-    deleteArticle: (id: number) => `article/delete/${id}`
+    updateArticle: (id: string) => `article/update/${id}`,
+    deleteArticle: (id: string) => `article/delete/${id}`,
+
+    // Message
+    getListByArticle: (id: string) => `comment/getListByArticle/${id}`,
+    updateMessage: (id: string) => `comment/update/${id}`,
+    createMessage: () => 'comment/create',
+    deleteMessage: (id: string) => `comment/delete/${id}`
 }
