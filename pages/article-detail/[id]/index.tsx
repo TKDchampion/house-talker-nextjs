@@ -4,7 +4,7 @@ import Box from "../../components/box";
 import { getLayout } from "../../components/layout";
 import SpinnerCommon from "../../components/spinner";
 import { storageGet } from "../../core/storage";
-import { getArticleDetail } from "../../services/article";
+import { getArticleDetailService } from "../../services/article";
 import { ArticleInfo } from "../../services/article/model";
 import {
   createMessageService,
@@ -292,7 +292,7 @@ export default ArticleDetail;
 // SSR
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const id = context.params?.id;
-  const data = (await getArticleDetail(id as string)) as ArticleInfo;
+  const data = (await getArticleDetailService(id as string)) as ArticleInfo;
   const messages = (await getListByArticleService(
     id as string
   )) as MessagesInfo[];

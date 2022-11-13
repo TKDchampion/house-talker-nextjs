@@ -16,7 +16,7 @@ const Dialogue: React.FC<Props> = ({ title, isOpen, setStatus, children }) => {
     <Modal show={isOpen} onHide={handleClose} backdrop="static">
       <Modal.Header closeButton></Modal.Header>
       <Modal.Body>
-        <h1>{title}</h1>
+        <h1 className="modal-title">{title}</h1>
         {children}
       </Modal.Body>
     </Modal>
