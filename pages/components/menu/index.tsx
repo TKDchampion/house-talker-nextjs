@@ -5,12 +5,14 @@ import { storageClear, storageGet, storageHasItem } from "../../core/storage";
 import { useRouter } from "next/router";
 import LoginModal from "./components-custom/login-modal";
 import SignupModal from "./components-custom/signup-modal";
+import ProfileModal from "./components-custom/profile-modal";
 
 const Menu = () => {
   // hooks
   const [isLogin, setIsLogin] = useState(false);
   const [isOpenPopupLogin, setIsOpenPopupLogin] = useState(false);
   const [isOpenPopupSignup, setIsOpenPopupSignup] = useState(false);
+  const [isOpenPopupProfile, setIsOpenPopupProfile] = useState(false);
   const router = useRouter();
 
   // event
@@ -38,7 +40,12 @@ const Menu = () => {
             </div>
             {isLogin ? (
               <div className="d-flex">
-                <div className="header-menu-item">{storageGet("nickName")}</div>
+                <div
+                  className="header-menu-item"
+                  onClick={() => setIsOpenPopupProfile(true)}
+                >
+                  {storageGet("nickName")}
+                </div>
                 <div className="header-menu-item" onClick={() => logout()}>
                   登出
                 </div>
@@ -71,6 +78,10 @@ const Menu = () => {
       <SignupModal
         isOpenPopupSignup={isOpenPopupSignup}
         setIsOpenPopupSignup={setIsOpenPopupSignup}
+      />
+      <ProfileModal
+        isOpenPopupProfile={isOpenPopupProfile}
+        setIsOpenPopupProfile={setIsOpenPopupProfile}
       />
     </>
   );
