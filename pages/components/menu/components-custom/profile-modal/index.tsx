@@ -39,8 +39,12 @@ const ProfileModal: React.FC<Props> = ({
   };
 
   const createArticle = () => {
-    router.push("article-editor");
+    router.push("/article-editor");
     setIsOpenPopupProfile(false);
+  };
+
+  const onAction = (type: string) => {
+    type === "Update" && setIsOpenPopupProfile(false);
   };
 
   useEffect(() => {
@@ -76,7 +80,14 @@ const ProfileModal: React.FC<Props> = ({
             <div></div>
           </div>
           {articleList?.map((item) => {
-            return <ListItem setting={item} key={item.id} isControlBtn />;
+            return (
+              <ListItem
+                setting={item}
+                key={item.id}
+                isControlBtn
+                onAction={onAction}
+              />
+            );
           })}
           <div className="profile-box-articles"></div>
         </div>

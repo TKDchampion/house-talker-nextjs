@@ -5,17 +5,19 @@ import { ArticleInfo } from "../../services/article/model";
 interface Props {
   setting: ArticleInfo;
   isControlBtn?: boolean;
+  onAction?: (type: "Delete" | "Update" | "Detail") => void;
 }
 
-const ListItem: React.FC<Props> = ({ setting, isControlBtn }) => {
+const ListItem: React.FC<Props> = ({ setting, isControlBtn, onAction }) => {
   const router = useRouter();
 
-  const goUpdateOrDetail = (pathName: "article-page" | "article-detail") => {
+  const goUpdateOrDetail = (pathName: "article-editor" | "article-detail") => {
     // this.router.routeReuseStrategy.shouldReuseRoute = () => false;
     // this.router.onSameUrlNavigation = 'reload';
     // this.router.navigate([`/app/${pathName}/${this.setting?.id}`]);
     // this.modalService.hide();
-    router.push(`${pathName}/${setting?.id}`);
+    router.push(`/${pathName}/${setting?.id}`);
+    onAction && onAction(pathName === "article-editor" ? "Update" : "Detail");
   };
 
   const deleteBtn = (articleId?: string) => {
@@ -55,14 +57,17 @@ const ListItem: React.FC<Props> = ({ setting, isControlBtn }) => {
           <button
             type="button"
             className="btn btn-success"
-            onClick={() => goUpdateOrDetail("article-page")}
+            onClick={() => goUpdateOrDetail("article-editor")}
           >
             更新
           </button>
           <button
             type="button"
             className="btn btn-danger"
-            onClick={() => deleteBtn(setting?.id)}
+            onClick={() => {
+              deleteBtn(setting?.id);
+              onAction && onAction("Delete");
+            }}
           >
             刪除
           </button>
