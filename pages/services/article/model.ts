@@ -10,3 +10,12 @@ export interface ArticleInfo {
     replies: number;
     [key: string]: any;
 }
+
+export interface CreateArticleParams {
+    content: string;
+    location: string;
+    summaryContent: string;
+    tips: string;
+    title: string;
+    isHiddenName: boolean;
+}

@@ -1,0 +1,25 @@
+@import "react-quill/dist/quill.snow.css";
+@import "./variables.scss";
+
+.ql-toolbar.ql-snow {
+  border-radius: 10px 10px 0 0;
+}
+
+.ql-container.ql-snow {
+  border-radius: 0 0 10px 10px;
+  background: #ffffff;
+}
+
+.form-select,
+.form-control {
+  &.error {
+    border: 1px solid $errorColor;
+  }
+}
+
+.error-editor {
+  .ql-toolbar.ql-snow,
+  .ql-container.ql-snow {
+    border: 1px solid $errorColor;
+  }
+}
