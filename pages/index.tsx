@@ -14,7 +14,11 @@ const Home: NextPageWithLayout = () => {
 
   useEffect(() => {
     if (allNewsArticlesResp.isSuccess) {
-      setListData(allNewsArticlesResp.data?.data);
+      const articlesList: ArticleInfo[] = JSON.parse(
+        JSON.stringify(allNewsArticlesResp.data?.data)
+      );
+      articlesList.sort((a, b) => (a.timeTw > b.timeTw ? -1 : 1));
+      setListData(articlesList);
     }
   }, [allNewsArticlesResp.data?.data, allNewsArticlesResp.isSuccess]);
 

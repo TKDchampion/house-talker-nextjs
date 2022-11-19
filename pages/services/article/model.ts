@@ -19,3 +19,13 @@ export interface CreateArticleParams {
     title: string;
     isHiddenName: boolean;
 }
+
+export interface DistrictModel {
+    zip: string;
+    name: string;
+}
+
+export interface CityModel {
+    name: string;
+    districts: DistrictModel[];
+}

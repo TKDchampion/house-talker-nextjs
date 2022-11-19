@@ -5,8 +5,18 @@ import * as Yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
 import { CreateArticleForm } from "../components/editor/model";
+import { useEffect, useState } from "react";
+import { cityData, DistrictModel } from "./model";
+import { CreateArticleParams } from "../services/article/model";
+import { useCreateArticle } from "../services/article/hook";
+import SpinnerCommon from "../components/spinner";
+import { useRouter } from "next/router";
 
 const ArticleEditor = () => {
+  const [districtArray, setDistrictArray] = useState<DistrictModel[]>([]);
+  const [isOpenSpinner, setIsOpenSpinner] = useState(false);
+  const router = useRouter();
+
   const validationSchema = Yup.object().shape({
     title: Yup.string().required("此欄位必填"),
     summaryContent: Yup.string().required("此欄位必填"),
@@ -28,24 +38,54 @@ const ArticleEditor = () => {
     setValue,
     watch,
     trigger,
-  } = useForm<any>(formOptions);
-
-  const editorOnChange = (htmlString: string, editorTrigger?: boolean) => {
-    setValue("content", htmlString);
-    trigger("content");
-    console.log(htmlString);
-
-    // editorTrigger && trigger("content");
-  };
+  } = useForm<CreateArticleForm>(formOptions);
 
   const editorContent = watch("content");
+  const cityNameSelected = watch("cityName");
+
+  const createArticleResp = useCreateArticle();
+
+  const editorOnChange = (htmlString: string) => {
+    setValue("content", htmlString);
+    trigger("content");
+  };
 
   const onSubmit = (data: CreateArticleForm) => {
-    console.log(data);
+    setIsOpenSpinner(true);
+    const createParam: CreateArticleParams = {
+      title: data.title,
+      content: data.content,
+      location: `${data.cityName} ${data.districts}`,
+      summaryContent: data.summaryContent,
+      tips: data.tips,
+      isHiddenName: data.isHiddenName,
+    };
+    createArticleResp.mutate(createParam);
   };
+
+  useEffect(() => {
+    if (createArticleResp.isSuccess) {
+      setIsOpenSpinner(false);
+      router.push("/");
+    }
+    if (createArticleResp.isError) {
+      setIsOpenSpinner(false);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [createArticleResp.isSuccess, createArticleResp.isError]);
+
+  useEffect(() => {
+    const cityDistrict = cityData.find(
+      (i) => i.name === cityNameSelected
+    )?.districts;
+    setDistrictArray(cityDistrict ? cityDistrict : []);
+    setValue("districts", "");
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [cityNameSelected]);
 
   return (
     <Box>
+      {isOpenSpinner && <SpinnerCommon />}
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="mb-3">
           <label className="form-label">標題</label>
@@ -91,12 +131,14 @@ const ArticleEditor = () => {
                 className={`form-select ${errors.cityName && "error"}`}
                 {...register("cityName")}
               >
-                <option value="" disabled={true}>
-                  城市
-                </option>
-                {/* <option *ngFor="let item of city" [value]="item.name">
-            {{ item.name }}
-          </option> */}
+                <option value="">城市</option>
+                {cityData.map((item) => {
+                  return (
+                    <option key={item.name} value={item.name}>
+                      {item.name}
+                    </option>
+                  );
+                })}
               </select>
               {errors.cityName && (
                 <div className="error-message">
@@ -109,15 +151,14 @@ const ArticleEditor = () => {
                 {...register("districts")}
                 className={`form-select ${errors.districts && "error"}`}
               >
-                <option value="" disabled={true}>
-                  地區
-                </option>
-                {/* <option
-            *ngFor="let districtItem of districts"
-            [value]="districtItem.name"
-          >
-            {{ districtItem.name }}
-          </option> */}
+                <option value="">地區</option>
+                {districtArray.map((districtItem) => {
+                  return (
+                    <option key={districtItem.name} value={districtItem.name}>
+                      {districtItem.name}
+                    </option>
+                  );
+                })}
               </select>
               {errors.districts && (
                 <div className="error-message">

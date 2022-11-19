@@ -44,8 +44,8 @@ const ProfileModal: React.FC<Props> = ({
   };
 
   useEffect(() => {
-    getArticleForUser();
-  }, []);
+    isOpenPopupProfile && getArticleForUser();
+  }, [isOpenPopupProfile]);
 
   return (
     <>
