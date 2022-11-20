@@ -15,10 +15,6 @@ const ListItem: React.FC<Props> = ({ setting, isControlBtn, onAction }) => {
   const router = useRouter();
 
   const goUpdateOrDetail = (pathName: "article-editor" | "article-detail") => {
-    // this.router.routeReuseStrategy.shouldReuseRoute = () => false;
-    // this.router.onSameUrlNavigation = 'reload';
-    // this.router.navigate([`/app/${pathName}/${this.setting?.id}`]);
-    // this.modalService.hide();
     router.push(`/${pathName}/${setting?.id}`);
     onAction && onAction(pathName === "article-editor" ? "Update" : "Detail");
   };
@@ -32,17 +28,6 @@ const ListItem: React.FC<Props> = ({ setting, isControlBtn, onAction }) => {
         },
         () => setIsOpenSpinner(false)
       );
-      //   this.spinnerService.show();
-      //   this.articleService.deleteArticle(articleId).subscribe(
-      //     () => {
-      //       this.router.routeReuseStrategy.shouldReuseRoute = () => false;
-      //       this.router.onSameUrlNavigation = 'reload';
-      //       this.router.navigate([`/app`]);
-      //       this.modalService.hide();
-      //       this.spinnerService.hide();
-      //     },
-      //     () => this.spinnerService.hide()
-      //   );
     }
   };
 

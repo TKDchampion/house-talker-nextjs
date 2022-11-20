@@ -82,15 +82,14 @@ const FormEditor = ({ id }: Props) => {
   const onChangeCity = (cityName: string) => {
     const cityDistrict = cityData.find((i) => i.name === cityName)?.districts;
     setDistrictArray(cityDistrict ? cityDistrict : []);
+    setInitialValue("");
   };
 
   // events
   useEffect(() => {
-    if (districtArray.length > 0 && initialValue) {
+    if (districtArray.length > 0) {
       if (initialValue) {
-        const districts = JSON.parse(JSON.stringify(initialValue));
-        setValue("districts", districts);
-        setInitialValue("");
+        setValue("districts", initialValue);
       } else {
         setValue("districts", "");
       }
