@@ -1,6 +1,10 @@
 import { useEffect, useState } from "react";
+import ButtonGroup from "react-bootstrap/ButtonGroup";
+import Dropdown from "react-bootstrap/Dropdown";
+import DropdownButton from "react-bootstrap/DropdownButton";
 import Accordion from "./components/accordion";
 import Box from "./components/box";
+import { cityData, DistrictModel } from "./components/form-editor/model";
 import { getLayout } from "./components/layout";
 import ListItem from "./components/list-item";
 import SpinnerCommon from "./components/spinner";
@@ -11,6 +15,9 @@ import { NextPageWithLayout } from "./_app";
 const Home: NextPageWithLayout = () => {
   const { allNewsArticlesResp } = useAllNewsArticles();
   const [listData, setListData] = useState<ArticleInfo[]>();
+  const [selectedCity, setSelectedCity] = useState("城市");
+  const [selectedDistrict, setSelectedDistrict] = useState("地區");
+  const [districtList, setDistrictList] = useState<DistrictModel[]>([]);
 
   useEffect(() => {
     if (allNewsArticlesResp.isSuccess) {
@@ -21,6 +28,14 @@ const Home: NextPageWithLayout = () => {
       setListData(articlesList);
     }
   }, [allNewsArticlesResp.data?.data, allNewsArticlesResp.isSuccess]);
+
+  useEffect(() => {
+    const cityDistrict = cityData.find(
+      (i) => i.name === selectedCity
+    )?.districts;
+    setDistrictList(cityDistrict ? cityDistrict : []);
+    setSelectedDistrict("地區");
+  }, [selectedCity]);
 
   return (
     <div className="row">
@@ -35,30 +50,46 @@ const Home: NextPageWithLayout = () => {
                 <div className="d-flex justify-content-between flex-wrap">
                   <div>
                     <div className="btn-group">
-                      <button
-                        type="button"
-                        className="btn btn-primary dropdown-toggle"
+                      <DropdownButton
+                        as={ButtonGroup}
+                        key={"Primary"}
+                        id={`dropdown-variants-Primary`}
+                        variant={"primary"}
+                        title={selectedCity}
+                        onSelect={(e) => setSelectedCity(e as string)}
                       >
-                        {"123"} <span className="caret"></span>
-                      </button>
-                      <ul className="dropdown-menu">
-                        <li>
-                          <a className="dropdown-item">{"123"}</a>
-                        </li>
-                      </ul>
+                        <Dropdown.Item key="城市" eventKey="城市">
+                          城市
+                        </Dropdown.Item>
+                        {cityData.map((item) => {
+                          return (
+                            <Dropdown.Item key={item.name} eventKey={item.name}>
+                              {item.name}
+                            </Dropdown.Item>
+                          );
+                        })}
+                      </DropdownButton>
                     </div>
                     <div className="btn-group ms-2">
-                      <button
-                        type="button"
-                        className="btn btn-primary dropdown-toggle"
+                      <DropdownButton
+                        as={ButtonGroup}
+                        key={"Primary"}
+                        id={`dropdown-variants-Primary`}
+                        variant={"primary"}
+                        title={selectedDistrict}
+                        onSelect={(e) => setSelectedDistrict(e as string)}
                       >
-                        {"456"} <span className="caret"></span>
-                      </button>
-                      <ul className="dropdown-menu">
-                        <li>
-                          <a className="dropdown-item">{"456"}</a>
-                        </li>
-                      </ul>
+                        <Dropdown.Item key="地區" eventKey="地區">
+                          地區
+                        </Dropdown.Item>
+                        {districtList.map((item) => {
+                          return (
+                            <Dropdown.Item key={item.name} eventKey={item.name}>
+                              {item.name}
+                            </Dropdown.Item>
+                          );
+                        })}
+                      </DropdownButton>
                     </div>
                   </div>
                   <div>

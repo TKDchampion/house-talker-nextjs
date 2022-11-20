@@ -1,5 +1,4 @@
 import Box from "../box";
-import { getLayout } from "../layout";
 import Editor from "../editor";
 import * as Yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
