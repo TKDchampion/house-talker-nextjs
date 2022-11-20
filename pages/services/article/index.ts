@@ -19,3 +19,11 @@ export const getArticleForUserService = () => {
 
     return baseServices.get(config)
 };
+
+export const deleteArticleService = (id: string) => {
+    const config: ApiConfig = {
+        url: API_URL.deleteArticle(id)
+    }
+
+    return baseServices.delete(config)
+};

@@ -8,15 +8,31 @@ import { CreateArticleForm } from "../editor/model";
 import { useEffect, useState } from "react";
 import { cityData, DistrictModel } from "./model";
 import { CreateArticleParams } from "../../services/article/model";
-import { useCreateArticle } from "../../services/article/hook";
+import {
+  useCreateArticle,
+  useGetArticleDetail,
+  useUpdateArticle,
+} from "../../services/article/hook";
 import SpinnerCommon from "../spinner";
 import { useRouter } from "next/router";
 
-const FormEditor = () => {
+interface Props {
+  id?: string;
+}
+
+const FormEditor = ({ id }: Props) => {
+  // hooks
   const [districtArray, setDistrictArray] = useState<DistrictModel[]>([]);
   const [isOpenSpinner, setIsOpenSpinner] = useState(false);
+  const [initialValue, setInitialValue] = useState("");
   const router = useRouter();
 
+  // api
+  const createArticleResp = useCreateArticle();
+  const getArticleDetailResp = useGetArticleDetail();
+  const updateArticleResp = useUpdateArticle();
+
+  // statements
   const validationSchema = Yup.object().shape({
     title: Yup.string().required("此欄位必填"),
     summaryContent: Yup.string().required("此欄位必填"),
@@ -41,10 +57,8 @@ const FormEditor = () => {
   } = useForm<CreateArticleForm>(formOptions);
 
   const editorContent = watch("content");
-  const cityNameSelected = watch("cityName");
 
-  const createArticleResp = useCreateArticle();
-
+  // functions
   const editorOnChange = (htmlString: string) => {
     setValue("content", htmlString);
     trigger("content");
@@ -60,8 +74,40 @@ const FormEditor = () => {
       tips: data.tips,
       isHiddenName: data.isHiddenName,
     };
-    createArticleResp.mutate(createParam);
+    id
+      ? updateArticleResp.mutate({ id, body: createParam })
+      : createArticleResp.mutate(createParam);
   };
+
+  const onChangeCity = (cityName: string) => {
+    const cityDistrict = cityData.find((i) => i.name === cityName)?.districts;
+    setDistrictArray(cityDistrict ? cityDistrict : []);
+  };
+
+  // events
+  useEffect(() => {
+    if (districtArray.length > 0 && initialValue) {
+      if (initialValue) {
+        const districts = JSON.parse(JSON.stringify(initialValue));
+        setValue("districts", districts);
+        setInitialValue("");
+      } else {
+        setValue("districts", "");
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [districtArray, initialValue]);
+
+  useEffect(() => {
+    if (updateArticleResp.isSuccess) {
+      setIsOpenSpinner(false);
+      router.push("/");
+    }
+    if (updateArticleResp.isError) {
+      setIsOpenSpinner(false);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [updateArticleResp.isSuccess, updateArticleResp.isError]);
 
   useEffect(() => {
     if (createArticleResp.isSuccess) {
@@ -75,13 +121,32 @@ const FormEditor = () => {
   }, [createArticleResp.isSuccess, createArticleResp.isError]);
 
   useEffect(() => {
-    const cityDistrict = cityData.find(
-      (i) => i.name === cityNameSelected
-    )?.districts;
-    setDistrictArray(cityDistrict ? cityDistrict : []);
-    setValue("districts", "");
+    if (id) {
+      setIsOpenSpinner(true);
+      getArticleDetailResp.mutate(id);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [cityNameSelected]);
+  }, [id]);
+
+  useEffect(() => {
+    if (getArticleDetailResp.isSuccess) {
+      const data = getArticleDetailResp.data?.data;
+      const location = data.location.split(" ");
+      setValue("title", data.title);
+      setValue("summaryContent", data.summaryContent);
+      setValue("tips", data.tips);
+      setValue("cityName", location[0]);
+      setValue("content", data.content);
+      setValue("isHiddenName", data.isHiddenName);
+      onChangeCity(location[0]);
+      setInitialValue(location[1]);
+      setIsOpenSpinner(false);
+    }
+    if (getArticleDetailResp.isError) {
+      setIsOpenSpinner(false);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [getArticleDetailResp.isSuccess, getArticleDetailResp.isError]);
 
   return (
     <Box>
@@ -130,6 +195,7 @@ const FormEditor = () => {
               <select
                 className={`form-select ${errors.cityName && "error"}`}
                 {...register("cityName")}
+                onChange={(event) => onChangeCity(event.target.value)}
               >
                 <option value="">城市</option>
                 {cityData.map((item) => {
@@ -215,7 +281,5 @@ const FormEditor = () => {
     </Box>
   );
 };
-
-FormEditor.getLayout = getLayout;
 
 export default FormEditor;

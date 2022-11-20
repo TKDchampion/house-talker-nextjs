@@ -1,6 +1,8 @@
 import { useRouter } from "next/router";
-import React from "react";
+import React, { useState } from "react";
+import { deleteArticleService } from "../../services/article";
 import { ArticleInfo } from "../../services/article/model";
+import SpinnerCommon from "../spinner";
 
 interface Props {
   setting: ArticleInfo;
@@ -9,6 +11,7 @@ interface Props {
 }
 
 const ListItem: React.FC<Props> = ({ setting, isControlBtn, onAction }) => {
+  const [isOpenSpinner, setIsOpenSpinner] = useState(false);
   const router = useRouter();
 
   const goUpdateOrDetail = (pathName: "article-editor" | "article-detail") => {
@@ -21,59 +24,69 @@ const ListItem: React.FC<Props> = ({ setting, isControlBtn, onAction }) => {
   };
 
   const deleteBtn = (articleId?: string) => {
-    // if (articleId) {
-    //   this.spinnerService.show();
-    //   this.articleService.deleteArticle(articleId).subscribe(
-    //     () => {
-    //       this.router.routeReuseStrategy.shouldReuseRoute = () => false;
-    //       this.router.onSameUrlNavigation = 'reload';
-    //       this.router.navigate([`/app`]);
-    //       this.modalService.hide();
-    //       this.spinnerService.hide();
-    //     },
-    //     () => this.spinnerService.hide()
-    //   );
-    // }
+    if (articleId) {
+      setIsOpenSpinner(true);
+      deleteArticleService(articleId).then(
+        () => {
+          setIsOpenSpinner(false);
+        },
+        () => setIsOpenSpinner(false)
+      );
+      //   this.spinnerService.show();
+      //   this.articleService.deleteArticle(articleId).subscribe(
+      //     () => {
+      //       this.router.routeReuseStrategy.shouldReuseRoute = () => false;
+      //       this.router.onSameUrlNavigation = 'reload';
+      //       this.router.navigate([`/app`]);
+      //       this.modalService.hide();
+      //       this.spinnerService.hide();
+      //     },
+      //     () => this.spinnerService.hide()
+      //   );
+    }
   };
 
   return (
-    <div
-      className="list-item-box"
-      onClick={() => (isControlBtn ? "" : goUpdateOrDetail("article-detail"))}
-    >
-      <div className="list-item-box-label">
-        {setting?.location} • {setting?.tips}
-      </div>
-      <h1 className="list-item-box-title">{setting?.title}</h1>
-      <div className="list-item-box-content">{setting?.summaryContent}</div>
-      <div className="list-item-box-footer d-flex justify-content-between">
-        <div>Reply: {setting?.replies}</div>
-        <div>
-          {setting?.nickName} • {setting?.timeTw}
+    <>
+      {isOpenSpinner && <SpinnerCommon />}
+      <div
+        className="list-item-box"
+        onClick={() => (isControlBtn ? "" : goUpdateOrDetail("article-detail"))}
+      >
+        <div className="list-item-box-label">
+          {setting?.location} • {setting?.tips}
         </div>
-      </div>
-      {isControlBtn && (
-        <div className="text-end">
-          <button
-            type="button"
-            className="btn btn-success"
-            onClick={() => goUpdateOrDetail("article-editor")}
-          >
-            更新
-          </button>
-          <button
-            type="button"
-            className="btn btn-danger"
-            onClick={() => {
-              deleteBtn(setting?.id);
-              onAction && onAction("Delete");
-            }}
-          >
-            刪除
-          </button>
+        <h1 className="list-item-box-title">{setting?.title}</h1>
+        <div className="list-item-box-content">{setting?.summaryContent}</div>
+        <div className="list-item-box-footer d-flex justify-content-between">
+          <div>Reply: {setting?.replies}</div>
+          <div>
+            {setting?.nickName} • {setting?.timeTw}
+          </div>
         </div>
-      )}
-    </div>
+        {isControlBtn && (
+          <div className="text-end">
+            <button
+              type="button"
+              className="btn btn-success"
+              onClick={() => goUpdateOrDetail("article-editor")}
+            >
+              更新
+            </button>
+            <button
+              type="button"
+              className="btn btn-danger"
+              onClick={() => {
+                deleteBtn(setting?.id);
+                onAction && onAction("Delete");
+              }}
+            >
+              刪除
+            </button>
+          </div>
+        )}
+      </div>
+    </>
   );
 };
 

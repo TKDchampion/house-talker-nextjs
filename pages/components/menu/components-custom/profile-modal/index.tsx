@@ -44,7 +44,17 @@ const ProfileModal: React.FC<Props> = ({
   };
 
   const onAction = (type: string) => {
-    type === "Update" && setIsOpenPopupProfile(false);
+    switch (type) {
+      case "Update":
+        setIsOpenPopupProfile(false);
+        break;
+
+      case "Delete":
+        router.push("/");
+        setIsOpenPopupProfile(false);
+        window.location.reload();
+        break;
+    }
   };
 
   useEffect(() => {

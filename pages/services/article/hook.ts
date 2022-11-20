@@ -25,8 +25,24 @@ export function useAllNewsArticles() {
     };
 }
 
+export function useGetArticleDetail() {
+    const getArticleDetailFunc = (id: string) => {
+        const config: ApiConfig = {
+            url: API_URL.getArticleDetail(id)
+        };
+        return baseServices.get(config);
+    };
+
+    const getArticleDetailResp = useMutationService("getArticleDetailKey", getArticleDetailFunc);
+
+    return {
+        ...getArticleDetailResp,
+        mutate: getArticleDetailResp.mutate as (id: string) => void,
+    };
+}
+
 export function useCreateArticle() {
-    const CreateArticleFunc = (param: CreateArticleParams) => {
+    const createArticleFunc = (param: CreateArticleParams) => {
         const config: ApiConfig = {
             url: API_URL.createArticle(),
             body: param
@@ -34,10 +50,27 @@ export function useCreateArticle() {
         return baseServices.post(config);
     };
 
-    const CreateArticleResp = useMutationService("CreateArticleKey", CreateArticleFunc);
+    const createArticleResp = useMutationService("CreateArticleKey", createArticleFunc);
 
     return {
-        ...CreateArticleResp,
-        mutate: CreateArticleResp.mutate as (param: CreateArticleParams) => void,
+        ...createArticleResp,
+        mutate: createArticleResp.mutate as (param: CreateArticleParams) => void,
+    };
+}
+
+export function useUpdateArticle() {
+    const updateArticleFunc = (param: { body: CreateArticleParams, id: string }) => {
+        const config: ApiConfig = {
+            url: API_URL.updateArticle(param.id),
+            body: param.body
+        };
+        return baseServices.patch(config);
+    };
+
+    const updateArticleResp = useMutationService("updateArticleKey", updateArticleFunc);
+
+    return {
+        ...updateArticleResp,
+        mutate: updateArticleResp.mutate as (param: { body: CreateArticleParams, id: string }) => void,
     };
 }
