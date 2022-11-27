@@ -29,7 +29,17 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout) {
   return getLayout(
     <SSRProvider>
       <Head>
-        <title>Architecture</title>
+        <title>HouseTalker</title>
+        <meta name="application-name" content="HouseTalker" />
+        <meta
+          name="keywords"
+          content="house,HouseTalker,rent,租屋,惡房東,房東"
+        />
+        <meta property="og:site_name" content="HouseTalker" />
+        <meta
+          property="og:image"
+          content="https://www.maxpixel.net/static/photo/1x/House-Illustration-Exterior-Two-Floors-House-House-4921836.jpg"
+        />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" />
       </Head>

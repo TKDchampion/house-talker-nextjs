@@ -1,13 +1,14 @@
 import { ApiConfig } from "./../model";
 import axios, { AxiosInstance } from "axios";
-import { storageGet } from "../../storage";
+import { storageClear, storageGet } from "../../storage";
 import { StorageKey } from "../../../utils/storage-key";
 
 const errorHandle = (status: number, msg: string) => {
   console.log(`api error: ${status} | ${msg}`)
   switch (status) {
     case 401:
-      // window.location.href = "/login"
+      storageClear();
+      window.location.href = "/"
       break
     default:
       break
@@ -29,9 +30,6 @@ export default function getAxiosInstance(apiconfig: ApiConfig): AxiosInstance {
         "content-type": "application/json",
       },
   };
-
-  console.log(process.env["NEXT_PUBLIC_URL"]);
-
 
   const service = axios.create(apiConfig);
 

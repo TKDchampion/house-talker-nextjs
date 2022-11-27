@@ -1,4 +1,5 @@
 import { GetServerSideProps } from "next";
+import Head from "next/head";
 import React, { useEffect, useState } from "react";
 import Box from "../../components/box";
 import { getLayout } from "../../components/layout";
@@ -157,131 +158,144 @@ const ArticleDetail: any = ({ data, messages, id }: Props) => {
   }, [messages]);
 
   return (
-    <Box>
-      {isOpenSpinner && <SpinnerCommon />}
-      <div className="article-box">
-        <div className="d-flex justify-content-between flex-wrap">
-          <h1>{data?.title}</h1>
-          <div>
-            {data?.nickName} • {data?.timeTw}
+    <>
+      <Head>
+        <title>{data?.title}</title>
+        <meta name="description" content={data?.summaryContent} />
+      </Head>
+      <Box>
+        {isOpenSpinner && <SpinnerCommon />}
+        <div className="article-box">
+          <div className="d-flex justify-content-between flex-wrap">
+            <h1>{data?.title}</h1>
+            <div>
+              {data?.nickName} • {data?.timeTw}
+            </div>
+          </div>
+          <div className="tips">
+            {data?.location} • {data?.tips}
+          </div>
+          <div className="subtitle">{data?.summaryContent}</div>
+          <div
+            className="content"
+            dangerouslySetInnerHTML={{ __html: data?.content }}
+          ></div>
+
+          <div className="reply">
+            <textarea
+              name=""
+              id=""
+              cols={30}
+              rows={10}
+              value={inputMessage}
+              onChange={handleMessageChange}
+            ></textarea>
+            <button
+              type="button"
+              className="btn btn-success"
+              onClick={createMessage}
+              disabled={!inputMessage}
+            >
+              留言
+            </button>
+          </div>
+          <div className="form-check">
+            <input
+              className="form-check-input"
+              type="checkbox"
+              id="isHiddenName"
+              name="isHiddenName"
+              checked={checkboxHiddenName}
+              onChange={handleCheckChange}
+            />
+            <label className="form-check-label" htmlFor="defaultCheck1">
+              匿名請打勾
+            </label>
           </div>
         </div>
-        <div className="tips">
-          {data?.location} • {data?.tips}
-        </div>
-        <div className="subtitle">{data?.summaryContent}</div>
-        <div
-          className="content"
-          dangerouslySetInnerHTML={{ __html: data?.content }}
-        ></div>
 
-        <div className="reply">
-          <textarea
-            name=""
-            id=""
-            cols={30}
-            rows={10}
-            value={inputMessage}
-            onChange={handleMessageChange}
-          ></textarea>
-          <button
-            type="button"
-            className="btn btn-success"
-            onClick={createMessage}
-            disabled={!inputMessage}
-          >
-            留言
-          </button>
-        </div>
-        <div className="form-check">
-          <input
-            className="form-check-input"
-            type="checkbox"
-            id="isHiddenName"
-            name="isHiddenName"
-            checked={checkboxHiddenName}
-            onChange={handleCheckChange}
-          />
-          <label className="form-check-label" htmlFor="defaultCheck1">
-            匿名請打勾
-          </label>
-        </div>
-      </div>
-
-      <div className="messages">
-        {messagesData.map((item: MessagesInfo, index) => {
-          return (
-            <div
-              key={item.id}
-              className={`speech-bubble-${
-                item.isOwnMessage ? "right" : "left"
-              }`}
-            >
-              {item.openState ? (
-                <div>
-                  <textarea
-                    id=""
-                    cols={30}
-                    rows={10}
-                    value={item.draftContent}
-                    onChange={(event) => handleMessageItemChange(event, index)}
-                  ></textarea>
-                  <div className="form-check">
-                    <input
-                      className="form-check-input"
-                      type="checkbox"
-                      id="isHiddenName"
-                      name="isHiddenName"
-                      checked={item.draftIsHiddenName}
-                      onChange={(event) => handleCheckItemChange(event, index)}
-                    />
-                    <label className="form-check-label" htmlFor="defaultCheck1">
-                      匿名請打勾
-                    </label>
-                  </div>
-                </div>
-              ) : (
-                <div className="message-item">{item.content}</div>
-              )}
-              <div className="text-end me-3">
-                {item.isOwnMessage && (
+        <div className="messages">
+          {messagesData.map((item: MessagesInfo, index) => {
+            return (
+              <div
+                key={item.id}
+                className={`speech-bubble-${
+                  item.isOwnMessage ? "right" : "left"
+                }`}
+              >
+                {item.openState ? (
                   <div>
-                    <button
-                      type="button"
-                      className="btn btn-success"
-                      onClick={() => updataMessage(index)}
-                    >
-                      {item.openState ? "更新" : "編輯"}
-                    </button>
-                    <>
-                      {item.openState && (
-                        <button
-                          type="button"
-                          className="btn btn-secondary"
-                          onClick={() => cancelMessage(index)}
-                        >
-                          取消
-                        </button>
-                      )}
-                    </>
-                    <button
-                      type="button"
-                      className="btn btn-danger"
-                      onClick={() => deleteMessage(item)}
-                    >
-                      刪除
-                    </button>
+                    <textarea
+                      id=""
+                      cols={30}
+                      rows={10}
+                      value={item.draftContent}
+                      onChange={(event) =>
+                        handleMessageItemChange(event, index)
+                      }
+                    ></textarea>
+                    <div className="form-check">
+                      <input
+                        className="form-check-input"
+                        type="checkbox"
+                        id="isHiddenName"
+                        name="isHiddenName"
+                        checked={item.draftIsHiddenName}
+                        onChange={(event) =>
+                          handleCheckItemChange(event, index)
+                        }
+                      />
+                      <label
+                        className="form-check-label"
+                        htmlFor="defaultCheck1"
+                      >
+                        匿名請打勾
+                      </label>
+                    </div>
                   </div>
+                ) : (
+                  <div className="message-item">{item.content}</div>
                 )}
-                <div>
-                  {item.nickName} • {item.timeTw}
+                <div className="text-end me-3">
+                  {item.isOwnMessage && (
+                    <div>
+                      <button
+                        type="button"
+                        className="btn btn-success"
+                        onClick={() => updataMessage(index)}
+                      >
+                        {item.openState ? "更新" : "編輯"}
+                      </button>
+                      <>
+                        {item.openState && (
+                          <button
+                            type="button"
+                            className="btn btn-secondary"
+                            onClick={() => cancelMessage(index)}
+                          >
+                            取消
+                          </button>
+                        )}
+                      </>
+                      <button
+                        type="button"
+                        className="btn btn-danger"
+                        onClick={() => deleteMessage(item)}
+                      >
+                        刪除
+                      </button>
+                    </div>
+                  )}
+                  <div>
+                    {item.nickName} • {item.timeTw}
+                  </div>
                 </div>
               </div>
-            </div>
-          );
-        })}
-      </div>
-    </Box>
+            );
+          })}
+        </div>
+      </Box>
+    </>
   );
 };
 

@@ -11,6 +11,7 @@ import SpinnerCommon from "./components/spinner";
 import { useAllNewsArticles } from "./services/article/hook";
 import { ArticleInfo } from "./services/article/model";
 import { NextPageWithLayout } from "./_app";
+import Head from "next/head";
 
 const Home: NextPageWithLayout = () => {
   const { allNewsArticlesResp } = useAllNewsArticles();
@@ -88,104 +89,119 @@ const Home: NextPageWithLayout = () => {
   };
 
   return (
-    <div className="row">
-      {(allNewsArticlesResp.isLoading || allNewsArticlesResp.isFetching) && (
-        <SpinnerCommon />
-      )}
-      <div className="col-xl-4">
-        <div className="row">
-          <div className="col-12">
-            <Box>
-              <div>
-                <div className="d-flex justify-content-between flex-wrap">
-                  <div>
-                    <div className="btn-group">
-                      <DropdownButton
-                        as={ButtonGroup}
-                        key={"Primary"}
-                        id={`dropdown-variants-Primary`}
-                        variant={"primary"}
-                        title={selectedCity}
-                        onSelect={(e) => setSelectedCity(e as string)}
-                      >
-                        <Dropdown.Item key="城市" eventKey="城市">
-                          城市
-                        </Dropdown.Item>
-                        {cityData.map((item) => {
-                          return (
-                            <Dropdown.Item key={item.name} eventKey={item.name}>
-                              {item.name}
-                            </Dropdown.Item>
-                          );
-                        })}
-                      </DropdownButton>
-                    </div>
-                    <div className="btn-group ms-2">
-                      <DropdownButton
-                        as={ButtonGroup}
-                        key={"Primary"}
-                        id={`dropdown-variants-Primary`}
-                        variant={"primary"}
-                        title={selectedDistrict}
-                        onSelect={(e) => setSelectedDistrict(e as string)}
-                      >
-                        <Dropdown.Item key="地區" eventKey="地區">
-                          地區
-                        </Dropdown.Item>
-                        {districtList.map((item) => {
-                          return (
-                            <Dropdown.Item key={item.name} eventKey={item.name}>
-                              {item.name}
-                            </Dropdown.Item>
-                          );
-                        })}
-                      </DropdownButton>
-                    </div>
-                  </div>
-                  <div>
-                    <button
-                      type="button"
-                      className="btn btn-primary"
-                      onClick={clean}
-                    >
-                      清除篩選
-                    </button>
-                  </div>
-                </div>
+    <>
+      <Head>
+        <title>HouseTalker</title>
+        <meta
+          name="description"
+          content="這是一個專門收集惡房東或有關租屋踩雷新聞的平台，讓有租房需求的人免於成為受害者，改善租屋大環境，使社會變得佳和諧。"
+        />
+      </Head>
+      <div className="row">
+        {(allNewsArticlesResp.isLoading || allNewsArticlesResp.isFetching) && (
+          <SpinnerCommon />
+        )}
+        <div className="col-xl-4">
+          <div className="row">
+            <div className="col-12">
+              <Box>
                 <div>
-                  <input
-                    className="input-search"
-                    type="text"
-                    placeholder="可用暱稱、文章提示、文章標題來搜尋"
-                    onChange={(e) => setFilterText(e.target.value)}
-                    value={filterText}
-                  />
+                  <div className="d-flex justify-content-between flex-wrap">
+                    <div>
+                      <div className="btn-group">
+                        <DropdownButton
+                          as={ButtonGroup}
+                          key={"Primary"}
+                          id={`dropdown-variants-Primary`}
+                          variant={"primary"}
+                          title={selectedCity}
+                          onSelect={(e) => setSelectedCity(e as string)}
+                        >
+                          <Dropdown.Item key="城市" eventKey="城市">
+                            城市
+                          </Dropdown.Item>
+                          {cityData.map((item) => {
+                            return (
+                              <Dropdown.Item
+                                key={item.name}
+                                eventKey={item.name}
+                              >
+                                {item.name}
+                              </Dropdown.Item>
+                            );
+                          })}
+                        </DropdownButton>
+                      </div>
+                      <div className="btn-group ms-2">
+                        <DropdownButton
+                          as={ButtonGroup}
+                          key={"Primary"}
+                          id={`dropdown-variants-Primary`}
+                          variant={"primary"}
+                          title={selectedDistrict}
+                          onSelect={(e) => setSelectedDistrict(e as string)}
+                        >
+                          <Dropdown.Item key="地區" eventKey="地區">
+                            地區
+                          </Dropdown.Item>
+                          {districtList.map((item) => {
+                            return (
+                              <Dropdown.Item
+                                key={item.name}
+                                eventKey={item.name}
+                              >
+                                {item.name}
+                              </Dropdown.Item>
+                            );
+                          })}
+                        </DropdownButton>
+                      </div>
+                    </div>
+                    <div>
+                      <button
+                        type="button"
+                        className="btn btn-primary"
+                        onClick={clean}
+                      >
+                        清除篩選
+                      </button>
+                    </div>
+                  </div>
+                  <div>
+                    <input
+                      className="input-search"
+                      type="text"
+                      placeholder="可用暱稱、文章提示、文章標題來搜尋"
+                      onChange={(e) => setFilterText(e.target.value)}
+                      value={filterText}
+                    />
+                  </div>
+                  <button
+                    type="button"
+                    className="btn btn-primary w-100"
+                    onClick={filterFtn}
+                  >
+                    搜尋
+                  </button>
                 </div>
-                <button
-                  type="button"
-                  className="btn btn-primary w-100"
-                  onClick={filterFtn}
-                >
-                  搜尋
-                </button>
-              </div>
-            </Box>
-          </div>
-          <div className="col-12">
-            <Box>
-              <Accordion />
-            </Box>
+              </Box>
+            </div>
+            <div className="col-12">
+              <Box>
+                <Accordion />
+              </Box>
+            </div>
           </div>
         </div>
+        <div className="col-xl-8 article-list">
+          <Box>
+            {listData?.map((item) => {
+              return <ListItem setting={item} key={item.id} />;
+            })}
+          </Box>
+        </div>
       </div>
-      <div className="col-xl-8 article-list">
-        <Box>
-          {listData?.map((item) => {
-            return <ListItem setting={item} key={item.id} />;
-          })}
-        </Box>
-      </div>
-    </div>
+    </>
   );
 };
 

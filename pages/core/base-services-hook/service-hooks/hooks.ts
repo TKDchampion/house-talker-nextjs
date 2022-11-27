@@ -54,7 +54,7 @@ export function useMutationService(
 
 const handllingError = (error: any) => {
   if (error?.response?.status === 401) {
-    window.location.href = "/login";
     storageClear();
+    window.location.href = "/";
   }
 };
