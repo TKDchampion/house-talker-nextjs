@@ -1,9 +1,10 @@
 import "../styles/main.scss";
-import { ReactElement, ReactNode, useEffect } from "react";
+import { ReactElement, ReactNode } from "react";
 import type { NextPage } from "next";
 import type { AppProps } from "next/app";
 import { Hydrate, QueryClient, QueryClientProvider } from "react-query";
 import Head from "next/head";
+import { SSRProvider } from "react-bootstrap";
 
 export type NextPageWithLayout = NextPage & {
   getLayout?: (page: ReactElement) => ReactNode;
@@ -26,7 +27,7 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout) {
   // }, []);
 
   return getLayout(
-    <>
+    <SSRProvider>
       <Head>
         <title>Architecture</title>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -37,7 +38,7 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout) {
           <Component {...pageProps} />
         </Hydrate>
       </QueryClientProvider>
-    </>
+    </SSRProvider>
   );
 }
 
