@@ -15,6 +15,9 @@ import { NextPageWithLayout } from "./_app";
 const Home: NextPageWithLayout = () => {
   const { allNewsArticlesResp } = useAllNewsArticles();
   const [listData, setListData] = useState<ArticleInfo[]>();
+  const [defalutArticlesList, setDefalutArticlesList] =
+    useState<ArticleInfo[]>();
+  const [filterText, setFilterText] = useState("");
   const [selectedCity, setSelectedCity] = useState("城市");
   const [selectedDistrict, setSelectedDistrict] = useState("地區");
   const [districtList, setDistrictList] = useState<DistrictModel[]>([]);
@@ -26,6 +29,7 @@ const Home: NextPageWithLayout = () => {
       );
       articlesList.sort((a, b) => (a.timeTw > b.timeTw ? -1 : 1));
       setListData(articlesList);
+      setDefalutArticlesList(articlesList);
     }
   }, [allNewsArticlesResp.data?.data, allNewsArticlesResp.isSuccess]);
 
@@ -36,6 +40,52 @@ const Home: NextPageWithLayout = () => {
     setDistrictList(cityDistrict ? cityDistrict : []);
     setSelectedDistrict("地區");
   }, [selectedCity]);
+
+  const filterFtn = () => {
+    switch (!!defalutArticlesList) {
+      case selectedCity === "城市":
+        setListData(
+          defalutArticlesList?.filter(
+            (i: ArticleInfo) =>
+              i.nickName.includes(filterText) ||
+              i.tips.includes(filterText) ||
+              i.title.includes(filterText)
+          )
+        );
+        break;
+      case selectedDistrict === "地區" && selectedCity !== "城市":
+        setListData(
+          defalutArticlesList?.filter(
+            (i: ArticleInfo) =>
+              i.location.includes(selectedCity) &&
+              (i.nickName.includes(filterText) ||
+                i.tips.includes(filterText) ||
+                i.title.includes(filterText))
+          )
+        );
+        break;
+
+      default:
+        setListData(
+          defalutArticlesList?.filter(
+            (i: ArticleInfo) =>
+              i.location.includes(selectedCity) &&
+              i.location.includes(selectedDistrict) &&
+              (i.nickName.includes(filterText) ||
+                i.tips.includes(filterText) ||
+                i.title.includes(filterText))
+          )
+        );
+        break;
+    }
+  };
+
+  const clean = () => {
+    setSelectedCity("城市");
+    setSelectedDistrict("地區");
+    setFilterText("");
+    setListData(defalutArticlesList);
+  };
 
   return (
     <div className="row">
@@ -93,7 +143,11 @@ const Home: NextPageWithLayout = () => {
                     </div>
                   </div>
                   <div>
-                    <button type="button" className="btn btn-primary">
+                    <button
+                      type="button"
+                      className="btn btn-primary"
+                      onClick={clean}
+                    >
                       清除篩選
                     </button>
                   </div>
@@ -103,9 +157,15 @@ const Home: NextPageWithLayout = () => {
                     className="input-search"
                     type="text"
                     placeholder="可用暱稱、文章提示、文章標題來搜尋"
+                    onChange={(e) => setFilterText(e.target.value)}
+                    value={filterText}
                   />
                 </div>
-                <button type="button" className="btn btn-primary w-100">
+                <button
+                  type="button"
+                  className="btn btn-primary w-100"
+                  onClick={filterFtn}
+                >
                   搜尋
                 </button>
               </div>
