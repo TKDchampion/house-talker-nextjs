@@ -1,9 +1,9 @@
 version: "3"
 
 services:
-  yazu-nextjs:
-    container_name: yazu-nextjs-container
-    image: yazu-nextjs-img
+  house-talker-nextjs:
+    container_name: house-talker-nextjs-container
+    image: house-talker-nextjs-img
     build:
       context: .
       dockerfile: Dockerfile
