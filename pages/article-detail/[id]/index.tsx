@@ -18,7 +18,6 @@ import {
   MessagesInfo,
   updateMessageParam,
 } from "../../services/message/model";
-import { appendById } from "../../../scripts/appendSitemapById";
 
 interface Props {
   data: ArticleInfo;
@@ -311,7 +310,6 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   const messages = (await getListByArticleService(
     id as string
   )) as MessagesInfo[];
-  appendById(id);
 
   if (messages) {
     messages.sort((a, b) => (a.timeTw > b.timeTw ? -1 : 1));

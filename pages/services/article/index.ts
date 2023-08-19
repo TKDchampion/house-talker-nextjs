@@ -4,6 +4,14 @@ import { API_URL } from "../all-url";
 
 const baseServices = new BaseServices();
 
+export const getAllNewsArticlesService = () => {
+    const config: ApiConfig = {
+        url: API_URL.getAllNewsArticles()
+    }
+
+    return baseServices.get(config)
+};
+
 export const getArticleDetailService = (id: string) => {
     const config: ApiConfig = {
         url: API_URL.getArticleDetail(id)

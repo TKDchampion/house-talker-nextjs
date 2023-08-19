@@ -8,13 +8,19 @@ import { cityData, DistrictModel } from "./components/form-editor/model";
 import { getLayout } from "./components/layout";
 import ListItem from "./components/list-item";
 import SpinnerCommon from "./components/spinner";
-import { useAllNewsArticles } from "./services/article/hook";
+// import { useAllNewsArticles } from "./services/article/hook";
 import { ArticleInfo } from "./services/article/model";
-import { NextPageWithLayout } from "./_app";
 import Head from "next/head";
+import { appendById } from "../scripts/appendSitemapById";
+import { GetServerSideProps } from "next";
+import { getAllNewsArticlesService } from "./services/article";
 
-const Home: NextPageWithLayout = () => {
-  const { allNewsArticlesResp } = useAllNewsArticles();
+interface Props {
+  data: ArticleInfo[];
+}
+
+const Home: any = ({ data }: Props) => {
+  // const { allNewsArticlesResp } = useAllNewsArticles();
   const [listData, setListData] = useState<ArticleInfo[]>();
   const [defalutArticlesList, setDefalutArticlesList] =
     useState<ArticleInfo[]>();
@@ -23,16 +29,27 @@ const Home: NextPageWithLayout = () => {
   const [selectedDistrict, setSelectedDistrict] = useState("地區");
   const [districtList, setDistrictList] = useState<DistrictModel[]>([]);
 
+  // useEffect(() => {
+  //   if (allNewsArticlesResp.isSuccess) {
+  //     const articlesList: ArticleInfo[] = JSON.parse(
+  //       JSON.stringify(allNewsArticlesResp.data?.data)
+  //     );
+  //     articlesList.sort((a, b) => (a.timeTw > b.timeTw ? -1 : 1));
+  //     setListData(articlesList);
+  //     setDefalutArticlesList(articlesList);
+  //   }
+  // }, [allNewsArticlesResp.data?.data, allNewsArticlesResp.isSuccess]);
+
   useEffect(() => {
-    if (allNewsArticlesResp.isSuccess) {
+    if (data) {
       const articlesList: ArticleInfo[] = JSON.parse(
-        JSON.stringify(allNewsArticlesResp.data?.data)
+        JSON.stringify(data)
       );
       articlesList.sort((a, b) => (a.timeTw > b.timeTw ? -1 : 1));
       setListData(articlesList);
       setDefalutArticlesList(articlesList);
     }
-  }, [allNewsArticlesResp.data?.data, allNewsArticlesResp.isSuccess]);
+  }, [data]);
 
   useEffect(() => {
     const cityDistrict = cityData.find(
@@ -98,7 +115,7 @@ const Home: NextPageWithLayout = () => {
         />
       </Head>
       <div className="row">
-        {(allNewsArticlesResp.isLoading || allNewsArticlesResp.isFetching) && (
+        {(!data) && (
           <SpinnerCommon />
         )}
         <div className="col-xl-4">
@@ -207,3 +224,12 @@ const Home: NextPageWithLayout = () => {
 
 Home.getLayout = getLayout;
 export default Home;
+
+// SSR
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const data = (await getAllNewsArticlesService()) as ArticleInfo;
+
+  appendById(data.map((i:ArticleInfo) => i.id));
+
+  return { props: { data} };
+};
