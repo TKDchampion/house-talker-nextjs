@@ -1,5 +1,6 @@
 /** @type {import('next').NextConfig} */
 const webpack = require("webpack");
+
 const nextConfig = {
   reactStrictMode: true,
   pageExtensions: ["tsx", "jsx"],
@@ -11,6 +12,9 @@ const nextConfig = {
         "window.jQuery": "jquery",
       })
     );
+    if (isServer) {
+      require("./scripts/sitemap-generator.js");
+    }
     return config;
   },
 };
