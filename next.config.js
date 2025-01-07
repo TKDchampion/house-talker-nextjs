@@ -12,9 +12,6 @@ const nextConfig = {
         "window.jQuery": "jquery",
       })
     );
-    if (isServer) {
-      require("./scripts/sitemap-generator.js");
-    }
     return config;
   },
 };

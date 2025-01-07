@@ -11,7 +11,6 @@ import SpinnerCommon from "./components/spinner";
 // import { useAllNewsArticles } from "./services/article/hook";
 import { ArticleInfo } from "./services/article/model";
 import Head from "next/head";
-import { appendById } from "../scripts/appendSitemapById";
 import { GetServerSideProps } from "next";
 import { getAllNewsArticlesService } from "./services/article";
 
@@ -42,9 +41,7 @@ const Home: any = ({ data }: Props) => {
 
   useEffect(() => {
     if (data) {
-      const articlesList: ArticleInfo[] = JSON.parse(
-        JSON.stringify(data)
-      );
+      const articlesList: ArticleInfo[] = JSON.parse(JSON.stringify(data));
       articlesList.sort((a, b) => (a.timeTw > b.timeTw ? -1 : 1));
       setListData(articlesList);
       setDefalutArticlesList(articlesList);
@@ -115,9 +112,7 @@ const Home: any = ({ data }: Props) => {
         />
       </Head>
       <div className="row">
-        {(!data) && (
-          <SpinnerCommon />
-        )}
+        {!data && <SpinnerCommon />}
         <div className="col-xl-4">
           <div className="row">
             <div className="col-12">
@@ -229,7 +224,5 @@ export default Home;
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const data = (await getAllNewsArticlesService()) as ArticleInfo;
 
-  appendById(data.map((i:ArticleInfo) => i.id));
-
-  return { props: { data} };
+  return { props: { data } };
 };
